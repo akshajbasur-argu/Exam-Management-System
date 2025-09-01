@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+
+./Exam-System/src/main/resources/application.properties
