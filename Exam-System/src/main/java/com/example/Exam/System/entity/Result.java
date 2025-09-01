@@ -1,9 +1,7 @@
 package com.example.Exam.System.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -12,6 +10,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
+@Getter
+@Setter
 public class Result {
 
     @Id
@@ -28,4 +29,6 @@ public class Result {
     private int obtained_mark;
     private int no_of_right_answer;
     private int no_of_wrong_answer;
+
+
 }

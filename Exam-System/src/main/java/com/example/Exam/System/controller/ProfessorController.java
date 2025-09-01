@@ -18,7 +18,6 @@ import java.util.List;
 @RequestMapping("/api/v1/professor")
 public class ProfessorController {
 
-    /// Add questions and options
 
 
 
@@ -33,7 +32,7 @@ public class ProfessorController {
         return new ResponseEntity<List<Result>>(professorService.viewAllResults(id), HttpStatus.OK);
     }
 
-
+    /// Add questions and options
     @PostMapping("/addQuestion/{id}")
     public ResponseEntity<Void> addQuestion(@PathVariable int id, @RequestBody QuestionWithAnswerDto question)
     {
