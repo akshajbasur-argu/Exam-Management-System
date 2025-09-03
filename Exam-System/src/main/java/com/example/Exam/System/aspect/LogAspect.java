@@ -23,25 +23,22 @@ public class LogAspect {
     private static final ThreadLocal<Boolean> isLogging = ThreadLocal.withInitial(()->false);
 
     @Around("aspectTry()")
-    public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
+    public void logAround(ProceedingJoinPoint joinPoint) throws Throwable {
 
         LocalTime startTime = LocalTime.now();
-        System.out.println();
-        Object result = null;
         if(isLogging.get()){
             System.out.println("inside log if");
-            return joinPoint.proceed();
+
         }
         isLogging.set(true);
-        try {
-            return joinPoint.proceed();
-        }
-        finally {
+        System.out.println("Before");
+             joinPoint.proceed();
+
+
+        System.out.println("After");
             LocalTime endTime = LocalTime.now();
             Duration duration = Duration.between(startTime,endTime);
             System.out.println("Total Execution time = "+ duration);
             isLogging.set(false);
-        }
-
         }
 }
