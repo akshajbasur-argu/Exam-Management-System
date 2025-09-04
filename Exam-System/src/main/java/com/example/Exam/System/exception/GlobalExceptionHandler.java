@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> methodArgumentNotValidException(MethodArgumentNotValidException ex){
-        ApiError apiError= new ApiError("Some Error Occured "+ex.getMessage(),HttpStatus.NOT_FOUND);
+        ApiError apiError= new ApiError("Some Error Occured "+ex.getMessage(),HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(apiError,apiError.getHttpStatus());
     }
 

@@ -58,6 +58,7 @@ public class ProfessorController {
     @PostMapping("/setExamStatus")
     public ResponseEntity<Exam> examStatus(@RequestBody Exam exam)
     {
+
         return new ResponseEntity<Exam>(professorService.examStatus(exam), HttpStatus.OK);
     }
 
