@@ -1,12 +1,13 @@
-package com.example.Exam.System.security;
+package com.example.Exam.System.service.impl;
 
 
-import com.example.Exam.System.dto.LoginRequestDto;
-import com.example.Exam.System.dto.LoginResponseDto;
-import com.example.Exam.System.dto.SignUpRequestDto;
-import com.example.Exam.System.dto.SignUpResponseDto;
+import com.example.Exam.System.dto.login.LoginRequestDto;
+import com.example.Exam.System.dto.login.LoginResponseDto;
+import com.example.Exam.System.dto.signup.SignUpRequestDto;
+import com.example.Exam.System.dto.signup.SignUpResponseDto;
 import com.example.Exam.System.entity.User;
 import com.example.Exam.System.repository.UserRepo;
+import com.example.Exam.System.security.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,8 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.net.Authenticator;
 
 @Service
 @RequiredArgsConstructor

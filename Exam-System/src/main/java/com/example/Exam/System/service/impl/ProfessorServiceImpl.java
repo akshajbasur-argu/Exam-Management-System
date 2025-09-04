@@ -1,14 +1,13 @@
 package com.example.Exam.System.service.impl;
 
 import com.example.Exam.System.dto.QuestionOptionDto;
-import com.example.Exam.System.dto.QuestionWithAnswerDto;
-import com.example.Exam.System.dto.SaveExamDto;
-import com.example.Exam.System.entity.Exam;
-import com.example.Exam.System.entity.QuestionOption;
-import com.example.Exam.System.entity.Questions;
-import com.example.Exam.System.entity.Result;
+import com.example.Exam.System.dto.professor.AddQuestionsRequestDto;
+import com.example.Exam.System.dto.professor.CreateExamRequestDto;
+import com.example.Exam.System.entity.*;
 import com.example.Exam.System.repository.ExamRepo;
 import com.example.Exam.System.repository.QuestionsRepo;
+import com.example.Exam.System.repository.UserRepo;
+import com.example.Exam.System.security.AuthUtil;
 import com.example.Exam.System.service.ProfessorService;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
@@ -17,8 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.System.in;
 
 @Service
 public class ProfessorServiceImpl implements ProfessorService {
@@ -30,13 +27,20 @@ public class ProfessorServiceImpl implements ProfessorService {
     @Autowired
     private QuestionsRepo questionsRepo;
 
+    @Autowired
+    private UserRepo userRepo;
+
+    @Autowired
+    private AuthUtil authUtil;
 
 
     @Override
-    public Exam createExam(SaveExamDto examDto) {
+    public Exam createExam(CreateExamRequestDto examDto, String token) {
+        int userId=authUtil.getUserIdFromToken(token);
         Exam exam = modelMapper.map(examDto,Exam.class);
+        exam.setCreated_by(userId);
         List<Questions> questions= new ArrayList<>();
-        for(QuestionWithAnswerDto question: examDto.getQuestions())
+        for(AddQuestionsRequestDto question: examDto.getQuestions())
         {
             Questions questions1 = new Questions();
             questions1.setExam(exam);
@@ -66,7 +70,7 @@ public class ProfessorServiceImpl implements ProfessorService {
 
     @Override
     @Transactional
-    public Questions addQuestions(int id , QuestionWithAnswerDto questions) {
+    public Questions addQuestions(int id , AddQuestionsRequestDto questions) {
 
         Exam exam = examRepo.findById(id).orElseThrow(()-> new IllegalArgumentException("Exam does not exists"));
 
@@ -101,11 +105,6 @@ public class ProfessorServiceImpl implements ProfessorService {
 
         return questionsRepo.save(question);
 
-    }
-    /// Create a DTO
-    @Override
-    public QuestionOption addOptions(QuestionOption options) {
-        return null;
     }
 
     @Override

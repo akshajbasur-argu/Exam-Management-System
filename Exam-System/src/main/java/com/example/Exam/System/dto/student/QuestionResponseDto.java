@@ -1,4 +1,4 @@
-package com.example.Exam.System.dto;
+package com.example.Exam.System.dto.student;
 
 public class QuestionResponseDto {
     private int questions_id;

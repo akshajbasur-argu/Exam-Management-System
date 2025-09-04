@@ -1,8 +1,8 @@
-package com.example.Exam.System.dto;
+package com.example.Exam.System.dto.student;
 
 import java.util.List;
 
-public class UserResultDto {
+public class UserResultResponseDto {
     private String first_name;
     private String last_name;
     private List<ResultDto> result;

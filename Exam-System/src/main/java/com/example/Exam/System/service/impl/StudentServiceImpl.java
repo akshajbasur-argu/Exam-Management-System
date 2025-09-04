@@ -1,6 +1,6 @@
 package com.example.Exam.System.service.impl;
 
-import com.example.Exam.System.dto.*;
+import com.example.Exam.System.dto.student.*;
 import com.example.Exam.System.entity.Exam;
 import com.example.Exam.System.entity.Questions;
 import com.example.Exam.System.entity.Result;
@@ -9,11 +9,11 @@ import com.example.Exam.System.repository.ExamRepo;
 import com.example.Exam.System.repository.QuestionsRepo;
 import com.example.Exam.System.repository.ResultRepo;
 import com.example.Exam.System.repository.UserRepo;
+import com.example.Exam.System.security.AuthUtil;
 import com.example.Exam.System.service.StudentService;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -37,14 +37,18 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     QuestionsRepo questionsRepo;
 
+    @Autowired
+    private AuthUtil authUtil;
+
     @Override
-    public List<BasicExamDetailsDto> findActiveExams() {
+    public List<BasicExamDetailsResponseDto> findActiveExams() {
         List<Exam> exams =examRepo.findAllActiveExams();
         return exams.stream()
-                .map(exam -> modelMapper.map(exam, BasicExamDetailsDto.class))
+                .map(exam -> modelMapper.map(exam, BasicExamDetailsResponseDto.class))
                 .toList();
     }
 
+    @Override
     public ViewExamResponseDto viewExam(int id)
     {
         Exam exam= examRepo.findById(id).orElse(null);
@@ -59,9 +63,10 @@ public class StudentServiceImpl implements StudentService {
 
     }
     @Override
-    public UserResultDto fetchResult(int userId) {
-        User user = userRepo.findById(userId).orElse(null);
-        UserResultDto userResultDto = modelMapper.map(user, UserResultDto.class);
+    public UserResultResponseDto fetchResult(String token) {
+
+        User user = userRepo.findById(authUtil.getUserIdFromToken(token)).orElse(null);
+        UserResultResponseDto userResultDto = modelMapper.map(user, UserResultResponseDto.class);
 //        List<ResultDto> results = user.getResult()
 //                .stream()
 //                .map(result -> modelMapper.map(result, ResultDto.class))
@@ -90,10 +95,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Transactional
-    public Result submitExam(ExamResponseDto examResponseDto) {
+    public Result submitExam(CreateExamRequestDto createExamRequestDto) {
 
         int correct_answer = 0, wrong_answer = 0;
-        for (QuestionResponseDto question :examResponseDto.getQuestions()) {
+        for (QuestionResponseDto question : createExamRequestDto.getQuestions()) {
             Questions ques = questionsRepo.findById(question.getQuestions_id()).orElse(null);
             if (question.getQuestions_id() == ques.getQuestionOption().getId())
                 correct_answer++;
@@ -104,8 +109,8 @@ public class StudentServiceImpl implements StudentService {
                 .no_of_right_answer(correct_answer)
                 .no_of_wrong_answer(wrong_answer)
                 .obtained_mark(correct_answer*2)
-                .exams(examRepo.findById(examResponseDto.getExam_id()).orElse(null))
-                .user(userRepo.findById(examResponseDto.getUser_id()).orElse(null))
+                .exams(examRepo.findById(createExamRequestDto.getExam_id()).orElse(null))
+                .user(userRepo.findById(createExamRequestDto.getUser_id()).orElse(null))
                 .build();
         return resultRepo.save(rs);
 

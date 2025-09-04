@@ -1,8 +1,8 @@
-package com.example.Exam.System.dto;
+package com.example.Exam.System.dto.student;
 
 import java.util.List;
 
-public class ExamResponseDto {
+public class CreateExamRequestDto {
     private int user_id;
     private int exam_id;
     private List<QuestionResponseDto> questions;

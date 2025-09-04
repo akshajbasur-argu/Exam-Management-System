@@ -1,5 +1,6 @@
-package com.example.Exam.System.dto;
+package com.example.Exam.System.dto.student;
 
+import com.example.Exam.System.dto.QuestionOptionDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

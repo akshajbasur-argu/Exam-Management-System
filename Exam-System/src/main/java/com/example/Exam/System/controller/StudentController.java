@@ -1,9 +1,11 @@
 package com.example.Exam.System.controller;
 
-import com.example.Exam.System.dto.*;
-import com.example.Exam.System.entity.Exam;
-import com.example.Exam.System.entity.Result;
+import com.example.Exam.System.dto.student.BasicExamDetailsResponseDto;
+import com.example.Exam.System.dto.student.CreateExamRequestDto;
+import com.example.Exam.System.dto.student.UserResultResponseDto;
+import com.example.Exam.System.dto.student.ViewExamResponseDto;
 import com.example.Exam.System.service.impl.StudentServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +27,9 @@ public class StudentController {
 
     /// View list of active exams
     @GetMapping("/viewExam")
-    public ResponseEntity<List<BasicExamDetailsDto>>  viewAllActiveExam()
+    public ResponseEntity<List<BasicExamDetailsResponseDto>>  viewAllActiveExam()
     {
-        return new ResponseEntity<List<BasicExamDetailsDto>>(studentService.findActiveExams(),HttpStatus.OK);
+        return new ResponseEntity<List<BasicExamDetailsResponseDto>>(studentService.findActiveExams(),HttpStatus.OK);
     }
 
     /// Attempt an exam by selecting options
@@ -38,18 +40,22 @@ public class StudentController {
     }
 
     /// View personal results
-    @GetMapping("/viewResult/{id}")
-    public ResponseEntity<UserResultDto> ViewResult(@PathVariable int id)
+    @GetMapping("/viewResult")
+    public ResponseEntity<UserResultResponseDto> ViewResult(HttpServletRequest request)
     {
-        return new ResponseEntity<UserResultDto>(studentService.fetchResult(id),HttpStatus.OK);
+        String header=request.getHeader("Authorization");
+        if(header == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        String token = header.split(" ")[1];
+        return new ResponseEntity<UserResultResponseDto>(studentService.fetchResult(token),HttpStatus.OK);
     }
 
     /// Submit Exam
 
     @PostMapping("/submit")
-    public ResponseEntity<Void> submitExam(@RequestBody ExamResponseDto examResponseDto)
+    public ResponseEntity<Void> submitExam(@RequestBody CreateExamRequestDto createExamRequestDto)
     {
-        studentService.submitExam(examResponseDto);
+        studentService.submitExam(createExamRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

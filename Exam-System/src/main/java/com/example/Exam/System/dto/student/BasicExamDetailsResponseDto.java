@@ -1,6 +1,6 @@
-package com.example.Exam.System.dto;
+package com.example.Exam.System.dto.student;
 
-public class BasicExamDetailsDto {
+public class BasicExamDetailsResponseDto {
     private int id;
 
     public int getId() {

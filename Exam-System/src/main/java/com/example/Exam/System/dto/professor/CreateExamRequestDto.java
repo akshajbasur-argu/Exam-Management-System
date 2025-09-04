@@ -1,21 +1,17 @@
-package com.example.Exam.System.dto;
+package com.example.Exam.System.dto.professor;
 
-import com.example.Exam.System.entity.Questions;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
 
-public class SaveExamDto {
+public class CreateExamRequestDto {
     private String name;
     private String topic;
     private boolean active;
     private int duration;
-    private int created_by ;
-    private List<QuestionWithAnswerDto> questions;
+    private List<AddQuestionsRequestDto> questions;
 
     public String getName() {
         return name;
@@ -49,19 +45,11 @@ public class SaveExamDto {
         this.duration = duration;
     }
 
-    public int getCreated_by() {
-        return created_by;
-    }
-
-    public void setCreated_by(int created_by) {
-        this.created_by = created_by;
-    }
-
-    public List<QuestionWithAnswerDto> getQuestions() {
+    public List<AddQuestionsRequestDto> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(List<QuestionWithAnswerDto> questions) {
+    public void setQuestions(List<AddQuestionsRequestDto> questions) {
         this.questions = questions;
     }
 

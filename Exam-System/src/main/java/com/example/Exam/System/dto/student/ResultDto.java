@@ -1,4 +1,4 @@
-package com.example.Exam.System.dto;
+package com.example.Exam.System.dto.student;
 
 public class ResultDto {
     private int obtained_mark;

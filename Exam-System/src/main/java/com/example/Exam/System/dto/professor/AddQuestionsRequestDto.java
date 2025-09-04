@@ -1,13 +1,11 @@
-package com.example.Exam.System.dto;
+package com.example.Exam.System.dto.professor;
 
-import com.example.Exam.System.entity.Exam;
-import com.example.Exam.System.entity.QuestionOption;
-import jakarta.persistence.*;
+import com.example.Exam.System.dto.QuestionOptionDto;
 import lombok.Data;
 
 import java.util.List;
 @Data
-public class QuestionWithAnswerDto {
+public class AddQuestionsRequestDto {
 
     private String name;
     private String questionOption;

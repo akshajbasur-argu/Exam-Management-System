@@ -1,8 +1,9 @@
 package com.example.Exam.System.service;
 
-import com.example.Exam.System.dto.BasicExamDetailsDto;
-import com.example.Exam.System.dto.UserResultDto;
-import com.example.Exam.System.entity.Exam;
+import com.example.Exam.System.dto.student.BasicExamDetailsResponseDto;
+import com.example.Exam.System.dto.student.CreateExamRequestDto;
+import com.example.Exam.System.dto.student.UserResultResponseDto;
+import com.example.Exam.System.dto.student.ViewExamResponseDto;
 import com.example.Exam.System.entity.Result;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public interface StudentService {
     /// Attempt an exam by selecting options
     /// View personal results
 
-    public List<BasicExamDetailsDto> findActiveExams();
-    public UserResultDto fetchResult(int userId);
+    public List<BasicExamDetailsResponseDto> findActiveExams();
+    public UserResultResponseDto fetchResult(String token);
+    public ViewExamResponseDto viewExam(int id);
+    public Result submitExam(CreateExamRequestDto createExamRequestDto);
 }

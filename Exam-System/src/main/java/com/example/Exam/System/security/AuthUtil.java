@@ -39,4 +39,13 @@ public class AuthUtil {
                 .getPayload();
         return claims.getSubject();
     }
+    public int getUserIdFromToken(String token) {
+        Claims claims= Jwts.parser().verifyWith(getSecretKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return claims.get("userId",Integer.class);
+    }
+
+
 }

@@ -1,4 +1,4 @@
-package com.example.Exam.System.dto;
+package com.example.Exam.System.dto.signup;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
