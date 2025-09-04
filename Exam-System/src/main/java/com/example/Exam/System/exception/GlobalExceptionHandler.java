@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -23,8 +24,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError,apiError.getHttpStatus());
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiError> resourceNotFoundException(ResourceNotFoundException ex){
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiError> resourceNotFoundException(NoResourceFoundException ex){
         ApiError apiError= new ApiError("Some Error Occured "+ex.getMessage(),HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(apiError,apiError.getHttpStatus());
     }
