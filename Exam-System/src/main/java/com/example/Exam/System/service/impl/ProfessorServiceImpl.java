@@ -3,7 +3,9 @@ package com.example.Exam.System.service.impl;
 import com.example.Exam.System.dto.QuestionOptionDto;
 import com.example.Exam.System.dto.professor.AddQuestionsRequestDto;
 import com.example.Exam.System.dto.professor.CreateExamRequestDto;
+import com.example.Exam.System.dto.student.BasicExamDetailsResponseDto;
 import com.example.Exam.System.entity.*;
+import com.example.Exam.System.exception.ResourceNotFoundException;
 import com.example.Exam.System.repository.ExamRepo;
 import com.example.Exam.System.repository.QuestionsRepo;
 import com.example.Exam.System.repository.UserRepo;
@@ -14,25 +16,36 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.ReadOnlyFileSystemException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ProfessorServiceImpl implements ProfessorService {
 
-    @Autowired
-    private ExamRepo examRepo;
-    @Autowired
+
+    private final ExamRepo examRepo;
+    private final QuestionsRepo questionsRepo;
+    private final UserRepo userRepo;
     private ModelMapper modelMapper;
-    @Autowired
-    private QuestionsRepo questionsRepo;
-
-    @Autowired
-    private UserRepo userRepo;
-
-    @Autowired
     private AuthUtil authUtil;
 
+    @Autowired
+    public ProfessorServiceImpl(ExamRepo examRepo, QuestionsRepo questionsRepo, UserRepo userRepo) {
+        this.examRepo = examRepo;
+        this.questionsRepo = questionsRepo;
+        this.userRepo = userRepo;
+    }
+
+    @Autowired
+    public void setModelMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
+
+    @Autowired
+    public void setAuthUtil(AuthUtil authUtil) {
+        this.authUtil = authUtil;
+    }
 
     @Override
     public Exam createExam(CreateExamRequestDto examDto, String token) {
@@ -72,7 +85,7 @@ public class ProfessorServiceImpl implements ProfessorService {
     @Transactional
     public Questions addQuestions(int id , AddQuestionsRequestDto questions) {
 
-        Exam exam = examRepo.findById(id).orElseThrow(()-> new IllegalArgumentException("Exam does not exists"));
+        Exam exam = examRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Exam does not exists"));
 
 
 
@@ -108,14 +121,23 @@ public class ProfessorServiceImpl implements ProfessorService {
     }
 
     @Override
-    public Exam examStatus(Exam exam) {
+    public Exam examStatus(int id) {
+        Exam exam = examRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("Invalid Exam"));
         exam.setActive(exam.isActive()?false:true);
         return examRepo.save(exam);
     }
 
     @Override
     public List<Result> viewAllResults(int id) {
-        Exam exam = examRepo.findById(id).orElseThrow();
+        Exam exam = examRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Invalid Exam"));
         return exam.getResults();
+    }
+
+    @Override
+    public List<BasicExamDetailsResponseDto> displayALlExams() {
+        List<Exam> exams =examRepo.findAll();
+        return exams.stream()
+                .map(exam -> modelMapper.map(exam, BasicExamDetailsResponseDto.class))
+                .toList();
     }
 }

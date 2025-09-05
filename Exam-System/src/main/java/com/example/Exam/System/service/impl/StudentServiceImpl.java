@@ -5,6 +5,7 @@ import com.example.Exam.System.entity.Exam;
 import com.example.Exam.System.entity.Questions;
 import com.example.Exam.System.entity.Result;
 import com.example.Exam.System.entity.User;
+import com.example.Exam.System.exception.ResourceNotFoundException;
 import com.example.Exam.System.repository.ExamRepo;
 import com.example.Exam.System.repository.QuestionsRepo;
 import com.example.Exam.System.repository.ResultRepo;
@@ -23,26 +24,38 @@ import java.util.stream.Collectors;
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    @Autowired
-    ExamRepo examRepo;
 
-    @Autowired
-    ResultRepo resultRepo;
-    @Autowired
-    UserRepo userRepo;
-
-    @Autowired
-    ModelMapper modelMapper;
-
-    @Autowired
-    QuestionsRepo questionsRepo;
-
-    @Autowired
+    private final ExamRepo examRepo;
+    private final ResultRepo resultRepo;
+    private final UserRepo userRepo;
+    private final QuestionsRepo questionsRepo;
+    private ModelMapper modelMapper;
     private AuthUtil authUtil;
+
+
+    @Autowired
+    public StudentServiceImpl(ExamRepo examRepo, ResultRepo resultRepo, UserRepo userRepo, QuestionsRepo questionsRepo) {
+        this.examRepo = examRepo;
+        this.resultRepo = resultRepo;
+        this.userRepo = userRepo;
+        this.questionsRepo = questionsRepo;
+    }
+
+    @Autowired
+    public void setModelMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
+
+    @Autowired
+    public void setAuthUtil(AuthUtil authUtil) {
+        this.authUtil = authUtil;
+    }
 
     @Override
     public List<BasicExamDetailsResponseDto> findActiveExams() {
         List<Exam> exams =examRepo.findAllActiveExams();
+        if(exams.isEmpty())
+            throw new ResourceNotFoundException("No Active Exam");
         return exams.stream()
                 .map(exam -> modelMapper.map(exam, BasicExamDetailsResponseDto.class))
                 .toList();
@@ -65,7 +78,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public UserResultResponseDto fetchResult(String token) {
 
-        User user = userRepo.findById(authUtil.getUserIdFromToken(token)).orElse(null);
+        User user = userRepo.findById(authUtil.getUserIdFromToken(token)).orElseThrow(()-> new ResourceNotFoundException("No User with this Id"));
         UserResultResponseDto userResultDto = modelMapper.map(user, UserResultResponseDto.class);
 //        List<ResultDto> results = user.getResult()
 //                .stream()

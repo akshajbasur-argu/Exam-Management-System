@@ -2,6 +2,7 @@ package com.example.Exam.System.controller;
 
 import com.example.Exam.System.dto.professor.AddQuestionsRequestDto;
 import com.example.Exam.System.dto.professor.CreateExamRequestDto;
+import com.example.Exam.System.dto.student.BasicExamDetailsResponseDto;
 import com.example.Exam.System.entity.Exam;
 import com.example.Exam.System.entity.Result;
 import com.example.Exam.System.exception.InvalidRequestException;
@@ -17,19 +18,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/professor")
 public class ProfessorController {
-
-
-
-
+    private final ProfessorServiceImpl professorService;
 
     @Autowired
-    private ProfessorServiceImpl professorService;
+    public ProfessorController(ProfessorServiceImpl professorService) {
+        this.professorService = professorService;
+    }
 
     /// View results of all students for a specific exam
     @GetMapping("/viewResults/{id}")
     public ResponseEntity<List<Result>> viewResult(@PathVariable int id)
     {
-        return new ResponseEntity<List<Result>>(professorService.viewAllResults(id), HttpStatus.OK);
+        return new ResponseEntity<>(professorService.viewAllResults(id), HttpStatus.OK);
     }
 
     /// Add questions and options
@@ -55,11 +55,16 @@ public class ProfessorController {
 
 
     /// Activate/deactivate an exam
-    @PostMapping("/setExamStatus")
-    public ResponseEntity<Exam> examStatus(@RequestBody Exam exam)
+    @PostMapping("/setExamStatus/{id}")
+    public ResponseEntity<Exam> examStatus(@PathVariable int id)
     {
 
-        return new ResponseEntity<Exam>(professorService.examStatus(exam), HttpStatus.OK);
+        return new ResponseEntity<>(professorService.examStatus(id), HttpStatus.OK);
+    }
+
+    @GetMapping("viwAllExams")
+    public ResponseEntity<List<BasicExamDetailsResponseDto>> viewExams(){
+        return new ResponseEntity<>(professorService.displayALlExams(), HttpStatus.OK);
     }
 
 

@@ -10,6 +10,7 @@ import com.example.Exam.System.repository.UserRepo;
 import com.example.Exam.System.security.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,13 +18,34 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class AuthService {
     private final AuthenticationManager authenticationManager;
-    private final AuthUtil authUtil;
+    private AuthUtil authUtil;
     private final UserRepo userRepo;
-    private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
+    private ModelMapper modelMapper;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public void setAuthUtil(AuthUtil authUtil) {
+        this.authUtil= authUtil;
+    }
+
+    @Autowired
+    public void setModelMapper(ModelMapper modelMapper) {
+        this.modelMapper= modelMapper;
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder=passwordEncoder;
+    }
+
+    @Autowired
+    public AuthService(AuthenticationManager authenticationManager, UserRepo userRepo) {
+        this.authenticationManager = authenticationManager;
+        this.userRepo = userRepo;
+    }
+
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(),loginRequestDto.getPassword())

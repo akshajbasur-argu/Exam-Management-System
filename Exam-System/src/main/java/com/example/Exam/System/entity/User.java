@@ -1,6 +1,7 @@
 package com.example.Exam.System.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,9 +24,19 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @JoinColumn(unique = true)
+    @Column(nullable = false)
+    @Size(min = 5,max = 15,message = "Size should be between 5 and 15")
     private String username;
+
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
     private String first_name;
+
+    @Column(nullable = false)
     private String last_name;
 
     @Enumerated(EnumType.STRING)

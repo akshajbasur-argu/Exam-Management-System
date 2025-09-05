@@ -19,7 +19,7 @@ public class QuestionOption {
     @JoinColumn(name = "question_id")
     private Questions questions;/// (FK) done
 
-
+    @Column(nullable = false)
     private String name;
 
     public Questions getQuestions() {

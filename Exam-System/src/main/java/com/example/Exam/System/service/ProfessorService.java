@@ -2,6 +2,7 @@ package com.example.Exam.System.service;
 
 import com.example.Exam.System.dto.professor.AddQuestionsRequestDto;
 import com.example.Exam.System.dto.professor.CreateExamRequestDto;
+import com.example.Exam.System.dto.student.BasicExamDetailsResponseDto;
 import com.example.Exam.System.entity.Exam;
 import com.example.Exam.System.entity.Questions;
 import com.example.Exam.System.entity.Result;
@@ -17,7 +18,7 @@ public interface ProfessorService {
 
     public Exam createExam(CreateExamRequestDto exam, String token) ;
     public Questions addQuestions(int id , AddQuestionsRequestDto questions);
-    public Exam examStatus(Exam exam);
+    public Exam examStatus(int id) ;
     public List<Result> viewAllResults(int id);
-
+    public List<BasicExamDetailsResponseDto> displayALlExams();
 }

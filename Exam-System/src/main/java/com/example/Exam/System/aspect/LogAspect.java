@@ -17,28 +17,41 @@ import java.time.LocalTime;
 @Component
 public class LogAspect {
 
-    @Pointcut("execution(* com.example.Exam.System.service.impl.ProfessorServiceImpl.*(..))")
-    public void aspectTry() {
+    @Pointcut("execution(* com.example.Exam.System.service.impl..*(..))")
+    public void aspectForService() {
     }
-    private static final ThreadLocal<Boolean> isLogging = ThreadLocal.withInitial(()->false);
 
-    @Around("aspectTry()")
-    public void logAround(ProceedingJoinPoint joinPoint) throws Throwable {
+    @Pointcut("execution(* com.example.Exam.System.controller..*(..))")
+    public void aspectForController() {
+    }
+
+    private static final ThreadLocal<Boolean> isLogging = ThreadLocal.withInitial(() -> false);
+
+    @Around("aspectForService()")
+    public Object logService(ProceedingJoinPoint joinPoint) throws Throwable {
+        return logAround(joinPoint, "Service");
+    }
+
+    @Around("aspectForService()")
+    public Object logController(ProceedingJoinPoint joinPoint) throws Throwable {
+        return logAround(joinPoint, "Controller");
+    }
+
+    public Object logAround(ProceedingJoinPoint joinPoint, String name) throws Throwable {
 
         LocalTime startTime = LocalTime.now();
-        if(isLogging.get()){
-            System.out.println("inside log if");
-
-        }
         isLogging.set(true);
-        System.out.println("Before");
-             joinPoint.proceed();
+        System.out.println("Before execution of " + name);
 
 
-        System.out.println("After");
-            LocalTime endTime = LocalTime.now();
-            Duration duration = Duration.between(startTime,endTime);
-            System.out.println("Total Execution time = "+ duration);
-            isLogging.set(false);
-        }
+        Object result = joinPoint.proceed();
+
+        LocalTime endTime = LocalTime.now();
+        System.out.println("After execution of " + name);
+
+        Duration duration = Duration.between(startTime, endTime);
+        System.out.println("Total Execution time for " + name + " layer is :" + (float)duration.getNano()/1000000000 + " Seconds");
+        isLogging.set(false);
+        return result;
+    }
 }

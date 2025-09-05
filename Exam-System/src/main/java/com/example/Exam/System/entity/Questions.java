@@ -21,7 +21,10 @@ public class Questions {
     private Exam exam;
     /// (FK) done
 
+    @Column(nullable = false)
     private String name;
+
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "answer_id")
     private QuestionOption questionOption;

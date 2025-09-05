@@ -25,12 +25,10 @@ public class ApiError {
         return message;
     }
 
-    public ApiError() {
-        this.timestamp=LocalDateTime.now() ;
-    }
-
     public ApiError(String message,HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
         this.message = message;
+        this.timestamp=LocalDateTime.now() ;
+
     }
 }

@@ -19,11 +19,20 @@ public class Exam {
     private int id;
 
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String topic;
+
+    @Column(nullable = false)
     private boolean active;
+
+    @Column(nullable = false)
     private int duration;  ///(in minutes)
     /// Auditing to be applied
+
+    @Column(nullable = false)
     private int created_by ;  ///(User reference)
 
     @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL)

@@ -22,8 +22,16 @@ public class StudentController {
     /// View list of active exams
     /// Attempt an exam by selecting options
     /// View personal results
+
+    private final StudentServiceImpl studentService;
+
     @Autowired
-    StudentServiceImpl studentService;
+    public StudentController(StudentServiceImpl studentService) {
+        this.studentService = studentService;
+    }
+
+
+
 
     /// View list of active exams
     @GetMapping("/viewExam")
