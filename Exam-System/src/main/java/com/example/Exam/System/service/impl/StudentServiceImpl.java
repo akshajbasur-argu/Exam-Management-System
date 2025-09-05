@@ -91,6 +91,8 @@ public class StudentServiceImpl implements StudentService {
     List<ResultDto> resultDtoList = new ArrayList<>();
         for(Result result : user.getResult()){
 
+            if(result.getExams()==null)
+                continue;
             ResultDto resultDto = modelMapper.map(result,ResultDto.class);
 
 
@@ -113,7 +115,7 @@ public class StudentServiceImpl implements StudentService {
         int correct_answer = 0, wrong_answer = 0;
         for (QuestionResponseDto question : createExamRequestDto.getQuestions()) {
             Questions ques = questionsRepo.findById(question.getQuestions_id()).orElse(null);
-            if (question.getQuestions_id() == ques.getQuestionOption().getId())
+            if (question.getQuestionsOptions_id()== ques.getQuestionOption().getId())
                 correct_answer++;
             else
                 wrong_answer++;

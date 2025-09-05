@@ -56,10 +56,10 @@ public class ProfessorController {
 
     /// Activate/deactivate an exam
     @PostMapping("/setExamStatus/{id}")
-    public ResponseEntity<Exam> examStatus(@PathVariable int id)
+    public ResponseEntity<Void> examStatus(@PathVariable int id)
     {
-
-        return new ResponseEntity<>(professorService.examStatus(id), HttpStatus.OK);
+        professorService.examStatus(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("viwAllExams")
